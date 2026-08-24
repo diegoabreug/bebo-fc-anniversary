@@ -39,6 +39,8 @@ const memories = [
   { id: 21, src: "/foto21.jpeg", text: "Que vivaaaa el amooooor" },
   { id: 22, src: "/foto22.jpeg", text: "OFICIALMENTEEEE, MI licenciadaaaaaaaa!! hahahahahaha, que orgullo verte lograr y triunfar cosas mi vida" },
   { id: 23, src: "/foto23.jpeg", text: "Eta pa ultimo! con eso do palito e coco, si sin****mos prendiamos fuegooo coño" },
+  { id: 24, src: "/foto24.jpg", text: "Prontooooo, con 2 piñola coladaaaa con pilaaaa de lechaaa hahahahah" }
+
 ];
 
 // --------------------------------------------------------
@@ -235,9 +237,12 @@ export default function AnniversaryApp() {
             
             <div className="text-gray-700 space-y-4 text-lg leading-relaxed mb-10 w-full font-serif italic text-justify">
               <p>Hola mi vida,</p>
-              <p>Aquí escribirás todo lo que sientes. Este es un texto de prueba que puedes cambiar luego en el código. Dile lo mucho que la amas, lo orgulloso que estás de estos 4 años juntos, y todo lo que significa para ti.</p>
-              <p>Cada recuerdo de esas fotos es un tesoro para mí. Eres el mejor fichaje que ha hecho el Bebo FC en su historia. ¡Te amo con todo mi corazón!</p>
-              <p className="font-bold text-right mt-4">- Tu nombre aquí</p>
+              <p>Lamento no haber podido estar justo a tu lado para este momento y poder celebrar juntos nuestro cuarto aniversario, pero desarrollé esto esperando subirte los ánimos, mi amorcito lindo.</p>
+              <p>Si llegaste hasta este punto, significa que firmaste por 4 añitos más con el Bebo Fútbol Club. Espero que estés emocionada por esta nueva travesía en el equipo. Tu primer contrato de parte de la administración fue un rotundo éxito. Estoy muuuyy emocionado en esta nueva etapa, amor. Tiene sus retos, claro que sí, empezando con el rumbo de nuestras vidas, especialmente de la nueva licenciada en mercadotecnia. Pero créeme, esto no es na', vamos a buscarle la vuelta, echar pa' lante y llegar muchoooo más lejos de lo que hemos llegado hasta ahora. Mirando atrás, había una chica que dudaba de este momento, si acaso se iba a graduar, y mira ahora. Cada cosa tiene sus dificultades y complicaciones sin excepciones. Ya verás que echaremos pa' lante, bb.</p>
+              <p>Espero que te haya gustado mucho tu regalito, amor. Así mismo lo hice, lleno de emoción, viendo las fotos y mirando atrás me dio mucha nostalgia, y escribirte esta carta también me llena el corazón. Yo personalmente me comprometo a mejorar cada día como tu amigo, novio, futuro esposo y pareja de vida. Trabajaré en convertirme en esa persona que tanto te mereces porque, aunque no lo creas, lo que soy hoy en día no es ni la mitad de la pareja que tú te mereces.</p>
+              <p>Con mucho y todo el amooooorrrr del mundo te dedico esto. Te amo bebita!</p>
+              <p className="font-bold text-right mt-4">Bebo</p>
+              <p className="font-bold text-right mt-4">Diego Abreu</p>
             </div>
 
             {/* Botón de Flores */}
