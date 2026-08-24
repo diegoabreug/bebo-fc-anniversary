@@ -158,7 +158,7 @@ export default function AnniversaryApp() {
         {step === 1 && (
           <motion.div key="screen1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.5 }} className="flex flex-col items-center text-center max-w-md w-full">
             <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center shadow-xl mb-8 overflow-hidden relative border-4 border-white">
-               <Image src="/logo.png" alt="Bebo FC Logo" fill className="object-cover" />
+               <Image src="/logo.jpg" alt="Bebo FC Logo" fill className="object-cover" />
             </div>
             <h1 className="text-4xl font-extrabold mb-10 text-white drop-shadow-md">¿Quieres renovar contrato?</h1>
             <div className="flex gap-6 w-full justify-center">
