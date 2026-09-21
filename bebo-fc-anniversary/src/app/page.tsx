@@ -225,8 +225,8 @@ export default function AnniversaryApp() {
             
             <div className="text-gray-700 space-y-4 text-lg leading-relaxed mb-8 w-full font-serif italic text-justify">
               <p>Mi amor,</p>
-              <p>Dicen que regalar flores amarillas significa querer compartir la vida entera con alguien. No hay nadie en este mundo con quien prefiera caminar de la mano, reír y construir momentos que contigo.</p>
-              <p>Gracias por iluminar mis días con tu sonrisa. ¡Te amo muchísimo!</p>
+              <p>Por ahi lei que regalar flores amarillas significa querer compartir la vida entera con alguien. No hay nadie en este mundo con quien prefiera caminar de la mano, reír y construir una visa que contigo.</p>
+              <p>Gracias por amarme e iluminar mis días con tu sonrisa y carisma mi beba hermosa. ¡Te amo muchísimo!</p>
               <p className="font-bold text-right mt-4">- Diego</p>
             </div>
 
