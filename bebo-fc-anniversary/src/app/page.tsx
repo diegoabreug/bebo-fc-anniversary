@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import confetti from "canvas-confetti";
-import { Bell, MailOpen, ArrowLeft, Flower2, RotateCcw } from "lucide-react"; // Íconos
+// ¡OJO! Agregamos Check y Heart a la importación de íconos
+import { Bell, MailOpen, ArrowLeft, Flower2, RotateCcw, Check, Heart } from "lucide-react"; 
 
 // Importaciones de Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,7 +14,7 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 
 // --------------------------------------------------------
-// DATOS DE TUS FOTOS (Tus 25 fotos)
+// DATOS DE TUS FOTOS (Tus 24 fotos originales)
 // --------------------------------------------------------
 const memories = [
   { id: 1, src: "/foto1.jpeg", text: "GABIAAAOOOO! Donde todo empezo eeeh, Y matchinggg, somos almas gemelas, que noche esa" },
@@ -40,7 +41,6 @@ const memories = [
   { id: 22, src: "/foto22.jpeg", text: "OFICIALMENTEEEE, MI licenciadaaaaaaaa!! hahahahahaha, que orgullo verte lograr y triunfar cosas mi vida" },
   { id: 23, src: "/foto23.jpeg", text: "Eta pa ultimo! con eso do palito e coco, si sin****mos prendiamos fuegooo coño" },
   { id: 24, src: "/foto24.jpg", text: "Prontooooo, con 2 piñola coladaaaa con pilaaaa de lechaaa hahahahah" }
-
 ];
 
 // --------------------------------------------------------
@@ -82,13 +82,17 @@ function PolaroidCard({ memory }: { memory: { src: string; text: string } }) {
 // APLICACIÓN PRINCIPAL
 // --------------------------------------------------------
 export default function AnniversaryApp() {
-  const [step, setStep] = useState(1);
+  // Ahora la app inicia en el Step 0 (Pantalla Dividida)
+  const [step, setStep] = useState(0); 
   const [showError, setShowError] = useState(false);
   const [isSure, setIsSure] = useState(false);
   
-  // Nuevos estados
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const [showNotification, setShowNotification] = useState(false);
+
+  // Estados para las flores amarillas
+  const [flowers, setFlowers] = useState({ rosas: false, girasoles: false, tulipanes: false });
+  const hasSelectedFlowers = flowers.rosas || flowers.girasoles || flowers.tulipanes;
 
   // Lógica para mostrar la notificación a los 5 segundos de llegar a la pantalla de fotos
   useEffect(() => {
@@ -115,50 +119,158 @@ export default function AnniversaryApp() {
     }
   };
 
-  // Función para las rosas
+  // Función para la lluvia de rosas en la carta
   const throwRoses = () => {
-    // Usamos canvas-confetti con emojis de rosas
     const scalar = 3;
     const rose = confetti.shapeFromText({ text: '🌹', scalar });
-    
-    // Lluvia de rosas desde ambos lados
     const duration = 3000;
     const end = Date.now() + duration;
 
     (function frame() {
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ['#ff0000'],
-        shapes: [rose],
-        scalar: 2
-      });
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ['#ff0000'],
-        shapes: [rose],
-        scalar: 2
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
+      confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000'], shapes: [rose], scalar: 2 });
+      confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000'], shapes: [rose], scalar: 2 });
+      if (Date.now() < end) requestAnimationFrame(frame);
     }());
   };
 
+  // Función para la lluvia del Bouquet de Flores Amarillas
+  const throwBouquet = () => {
+    setStep(11); // Pasa a la pantalla de la sorpresa final
+    const shapes: any[] = [];
+    if (flowers.rosas) shapes.push(confetti.shapeFromText({ text: '🌹', scalar: 4 }));
+    if (flowers.girasoles) shapes.push(confetti.shapeFromText({ text: '🌻', scalar: 4 }));
+    if (flowers.tulipanes) shapes.push(confetti.shapeFromText({ text: '🌷', scalar: 4 }));
+
+    const end = Date.now() + 4000; // 4 segundos de lluvia
+    (function frame() {
+      confetti({ particleCount: 4, angle: 60, spread: 60, origin: { x: 0 }, shapes: shapes, scalar: 2 });
+      confetti({ particleCount: 4, angle: 120, spread: 60, origin: { x: 1 }, shapes: shapes, scalar: 2 });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    }());
+  };
+
+  // Función para seleccionar/deseleccionar flores
+  const toggleFlower = (type: 'rosas' | 'girasoles' | 'tulipanes') => {
+    setFlowers(prev => ({ ...prev, [type]: !prev[type] }));
+  };
+
+  // Cambia el color de fondo de la app dependiendo de la ruta
+  const bgClass = step >= 10 
+    ? "bg-gradient-to-br from-[#fff3b0] to-[#fce043]" 
+    : "bg-gradient-to-br from-[#e0c3fc] to-[#8ec5fc]";
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#e0c3fc] to-[#8ec5fc] flex flex-col items-center justify-center p-6 font-sans text-gray-900 overflow-hidden relative">
+    <main className={`min-h-screen ${step === 0 ? 'bg-gray-900' : bgClass} flex flex-col items-center justify-center p-6 font-sans text-gray-900 overflow-hidden relative transition-colors duration-1000`}>
       
       <AnimatePresence mode="wait">
+
+        {/* PANTALLA 0: SPLIT SCREEN (INICIO) */}
+        {step === 0 && (
+          <motion.div key="screen0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 flex flex-col md:flex-row w-full h-full m-0 p-0">
+            
+            {/* Mitad Flores Amarillas */}
+            <motion.div 
+              whileHover={{ scale: 1.02, zIndex: 10 }}
+              onClick={() => setStep(10)}
+              className="flex-1 bg-gradient-to-br from-[#fff3b0] to-[#fce043] flex flex-col items-center justify-center cursor-pointer md:border-r-4 border-b-4 md:border-b-0 border-white/30 transition-transform shadow-2xl relative overflow-hidden group"
+            >
+              <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
+                <Flower2 size={80} className="text-yellow-600 mb-6 drop-shadow-md group-hover:scale-110 transition-transform" />
+              </motion.div>
+              <h2 className="text-4xl font-extrabold text-yellow-800 drop-shadow-sm text-center px-4">Flores Amarillas</h2>
+            </motion.div>
+
+            {/* Mitad Renovar Contrato */}
+            <motion.div 
+              whileHover={{ scale: 1.02, zIndex: 10 }}
+              onClick={() => setStep(1)}
+              className="flex-1 bg-gradient-to-br from-[#e0c3fc] to-[#8ec5fc] flex flex-col items-center justify-center cursor-pointer transition-transform shadow-2xl relative overflow-hidden group"
+            >
+              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl mb-6 overflow-hidden relative border-4 border-white group-hover:scale-110 transition-transform">
+                <Image src="/logo.jpg" alt="Bebo FC Logo" fill className="object-cover" />
+              </div>
+              <h2 className="text-4xl font-extrabold text-white drop-shadow-md text-center px-4">Renovar Contrato</h2>
+            </motion.div>
+
+          </motion.div>
+        )}
+
+        {/* =========================================
+            RUTA: FLORES AMARILLAS 
+           ========================================= */}
+        
+        {/* PANTALLA 10: ARMA TU BOUQUET */}
+        {step === 10 && (
+          <motion.div key="screen10" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -50 }} className="flex flex-col items-center w-full max-w-md p-6 relative z-10">
+            <button onClick={() => setStep(0)} className="absolute -top-10 left-0 text-yellow-700 hover:text-yellow-900 bg-white/30 p-2 rounded-full transition-colors">
+              <ArrowLeft size={24} />
+            </button>
+            
+            <h1 className="text-4xl font-extrabold mb-8 text-yellow-800 drop-shadow-sm text-center">Arma tu bouquet 💐</h1>
+            
+            <div className="w-full space-y-4 mb-10">
+              <div onClick={() => toggleFlower('rosas')} className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border-4 ${flowers.rosas ? 'bg-white border-yellow-400 shadow-lg scale-105' : 'bg-white/50 border-transparent hover:bg-white/70'}`}>
+                <div className="flex items-center gap-4">
+                  <span className="text-4xl">🌹</span>
+                  <span className="text-xl font-bold text-gray-700">Rosas Rojas</span>
+                </div>
+                {flowers.rosas && <Check className="text-yellow-500" size={28} />}
+              </div>
+
+              <div onClick={() => toggleFlower('girasoles')} className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border-4 ${flowers.girasoles ? 'bg-white border-yellow-400 shadow-lg scale-105' : 'bg-white/50 border-transparent hover:bg-white/70'}`}>
+                <div className="flex items-center gap-4">
+                  <span className="text-4xl">🌻</span>
+                  <span className="text-xl font-bold text-gray-700">Girasoles</span>
+                </div>
+                {flowers.girasoles && <Check className="text-yellow-500" size={28} />}
+              </div>
+
+              <div onClick={() => toggleFlower('tulipanes')} className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border-4 ${flowers.tulipanes ? 'bg-white border-yellow-400 shadow-lg scale-105' : 'bg-white/50 border-transparent hover:bg-white/70'}`}>
+                <div className="flex items-center gap-4">
+                  <span className="text-4xl">🌷</span>
+                  <span className="text-xl font-bold text-gray-700">Tulipanes</span>
+                </div>
+                {flowers.tulipanes && <Check className="text-yellow-500" size={28} />}
+              </div>
+            </div>
+
+            <button 
+              onClick={throwBouquet} 
+              disabled={!hasSelectedFlowers}
+              className={`font-bold text-xl py-4 w-full rounded-full shadow-xl transition-all ${hasSelectedFlowers ? 'bg-yellow-600 text-white hover:bg-yellow-700 hover:scale-105' : 'bg-yellow-300/50 text-yellow-600/50 cursor-not-allowed'}`}
+            >
+              Continuar
+            </button>
+          </motion.div>
+        )}
+
+        {/* PANTALLA 11: ANIMACIÓN DEL BOUQUET */}
+        {step === 11 && (
+          <motion.div key="screen11" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center p-6 max-w-md relative z-10">
+            <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="bg-white/40 p-8 rounded-full shadow-2xl mb-8">
+               <Heart size={100} className="text-yellow-600 drop-shadow-lg" fill="currentColor" />
+            </motion.div>
+            <h1 className="text-4xl font-extrabold mb-4 text-yellow-800 drop-shadow-sm">¡Un detalle para ti!</h1>
+            <p className="text-xl text-yellow-900/80 font-medium mb-12">Porque te mereces todas las flores del mundo hoy y siempre.</p>
+            
+            <button onClick={() => setStep(0)} className="bg-white text-yellow-700 hover:bg-yellow-50 font-bold px-8 py-3 rounded-full shadow-md transition-transform active:scale-95">
+              Volver al inicio
+            </button>
+          </motion.div>
+        )}
+
+        {/* =========================================
+            RUTA: BEBO FC (Renovar Contrato) 
+           ========================================= */}
         
         {/* PANTALLA 1 */}
         {step === 1 && (
-          <motion.div key="screen1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.5 }} className="flex flex-col items-center text-center max-w-md w-full">
+          <motion.div key="screen1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.5 }} className="flex flex-col items-center text-center max-w-md w-full relative z-10">
+            {/* Botón para regresar al inicio */}
+            <button onClick={() => setStep(0)} className="absolute -top-6 left-0 text-white/70 hover:text-white bg-black/10 p-2 rounded-full transition-colors">
+              <ArrowLeft size={24} />
+            </button>
+
             <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center shadow-xl mb-8 overflow-hidden relative border-4 border-white">
                <Image src="/logo.jpg" alt="Bebo FC Logo" fill className="object-cover" />
             </div>
@@ -201,7 +313,7 @@ export default function AnniversaryApp() {
                  grabCursor={true}
                  modules={[EffectCards]}
                  className="w-full"
-                 onSwiper={setSwiperInstance} // Guardamos la instancia para poder controlarla
+                 onSwiper={setSwiperInstance}
                >
                  {memories.map((memory) => (
                    <SwiperSlide key={memory.id} className="bg-transparent flex justify-center">
@@ -214,7 +326,6 @@ export default function AnniversaryApp() {
              <div className="flex flex-col items-center gap-4 mt-8">
                <p className="text-white/80 font-medium text-sm text-center">Desliza para ver más • Toca la foto para leer</p>
                
-               {/* Botón para regresar a la primera foto */}
                <button 
                  onClick={() => swiperInstance?.slideTo(0)} 
                  className="flex items-center gap-2 text-white bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full backdrop-blur-sm transition-all"
@@ -245,7 +356,6 @@ export default function AnniversaryApp() {
               <p className="font-bold text-right mt-4">Diego Abreu</p>
             </div>
 
-            {/* Botón de Flores */}
             <button onClick={throwRoses} className="bg-pink-100 text-pink-600 border-2 border-pink-300 hover:bg-pink-200 px-6 py-3 rounded-full flex items-center gap-3 font-bold text-lg shadow-md hover:scale-105 transition-transform active:scale-95">
               <Flower2 size={24} /> ¡Toca para una sorpresa!
             </button>
@@ -253,7 +363,7 @@ export default function AnniversaryApp() {
         )}
       </AnimatePresence>
 
-      {/* NOTIFICACIÓN FLOTANTE (Aparece sobre la pantalla 3) */}
+      {/* NOTIFICACIÓN FLOTANTE */}
       <AnimatePresence>
         {showNotification && step === 3 && (
           <motion.div 
