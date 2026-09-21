@@ -66,78 +66,34 @@ function PolaroidCard({ memory }: { memory: { src: string; text: string } }) {
 // --------------------------------------------------------
 // COMPONENTE: BOUQUET DE GIRASOLES VECTORIAL (CODEADO)
 // --------------------------------------------------------
+// --------------------------------------------------------
+// COMPONENTE: BOUQUET DE GIRASOLES (IMAGEN ANIMADA)
+// --------------------------------------------------------
 function SunflowerBouquet() {
-  const petalsCount = 14;
-
   return (
     <motion.div 
-      initial={{ scale: 0, y: 50 }} 
-      animate={{ scale: 1, y: 0 }} 
-      transition={{ type: "spring", damping: 15, duration: 0.8 }}
-      className="relative w-72 h-80 flex flex-col items-center justify-center mb-6"
+      initial={{ scale: 0, y: 100, opacity: 0 }} 
+      animate={{ scale: 1, y: 0, opacity: 1 }} 
+      transition={{ type: "spring", damping: 12, duration: 1.2 }}
+      className="relative w-80 h-96 flex flex-col items-center justify-center mb-6"
     >
-      {/* Papel de envoltura del ramo */}
-      <div className="absolute bottom-0 w-44 h-56 bg-gradient-to-b from-amber-50 to-amber-200 rounded-b-3xl shadow-2xl border-2 border-amber-300/40 flex flex-col items-center justify-end pb-4 z-20">
-        <div className="w-16 h-10 bg-amber-500 rounded-full shadow-lg flex items-center justify-center text-white text-2xl">
-          🎀
-        </div>
-      </div>
-
-      {/* Contenedor de Girasoles Codeados */}
-      <div className="absolute -top-6 w-64 h-64 flex items-center justify-center z-10">
+      {/* Animación continua de flotación suave */}
+      <motion.div
+        animate={{ y: [0, -15, 0] }}
+        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+        className="relative w-full h-full"
+      >
+        {/* Un pequeño resplandor detrás del ramo */}
+        <div className="absolute inset-0 bg-yellow-400/20 blur-3xl rounded-full scale-75 -z-10" />
         
-        {/* Girasol Central */}
-        <div className="absolute top-2 w-36 h-36 flex items-center justify-center animate-pulse">
-          <svg className="w-full h-full drop-shadow-lg" viewBox="0 0 100 100">
-            {Array.from({ length: petalsCount }).map((_, i) => (
-              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#FACC15" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
-            ))}
-            <circle cx="50" cy="50" r="18" fill="#78350F" />
-            <circle cx="50" cy="50" r="13" fill="#451A03" />
-          </svg>
-        </div>
-
-        {/* Girasol Izquierdo */}
-        <div className="absolute left-0 top-14 w-28 h-28">
-          <svg className="w-full h-full drop-shadow-md" viewBox="0 0 100 100">
-            {Array.from({ length: petalsCount }).map((_, i) => (
-              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#EAB308" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
-            ))}
-            <circle cx="50" cy="50" r="18" fill="#78350F" />
-          </svg>
-        </div>
-
-        {/* Girasol Derecho */}
-        <div className="absolute right-0 top-14 w-28 h-28">
-          <svg className="w-full h-full drop-shadow-md" viewBox="0 0 100 100">
-            {Array.from({ length: petalsCount }).map((_, i) => (
-              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#EAB308" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
-            ))}
-            <circle cx="50" cy="50" r="18" fill="#78350F" />
-          </svg>
-        </div>
-
-        {/* Girasol Trasero Izquierdo */}
-        <div className="absolute left-6 -top-2 w-24 h-24">
-          <svg className="w-full h-full drop-shadow-sm" viewBox="0 0 100 100">
-            {Array.from({ length: petalsCount }).map((_, i) => (
-              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#CA8A04" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
-            ))}
-            <circle cx="50" cy="50" r="18" fill="#451A03" />
-          </svg>
-        </div>
-
-        {/* Girasol Trasero Derecho */}
-        <div className="absolute right-6 -top-2 w-24 h-24">
-          <svg className="w-full h-full drop-shadow-sm" viewBox="0 0 100 100">
-            {Array.from({ length: petalsCount }).map((_, i) => (
-              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#CA8A04" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
-            ))}
-            <circle cx="50" cy="50" r="18" fill="#451A03" />
-          </svg>
-        </div>
-
-      </div>
+        {/* Tu imagen 3D sin fondo */}
+        <Image 
+          src="/bouquet.png" 
+          alt="Ramo de girasoles" 
+          fill 
+          className="object-contain drop-shadow-2xl" 
+        />
+      </motion.div>
     </motion.div>
   );
 }
