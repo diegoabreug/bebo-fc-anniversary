@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import confetti from "canvas-confetti";
-import { Bell, ArrowLeft, Flower2, RotateCcw, Check } from "lucide-react"; 
+import { Bell, ArrowLeft, Flower2, RotateCcw, Mail, Heart } from "lucide-react"; 
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards } from "swiper/modules";
@@ -12,7 +12,7 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 
 // --------------------------------------------------------
-// DATOS DE TUS FOTOS
+// DATOS DE TUS FOTOS (Tus 24 fotos originales)
 // --------------------------------------------------------
 const memories = [
   { id: 1, src: "/foto1.jpeg", text: "GABIAAAOOOO! Donde todo empezo eeeh, Y matchinggg, somos almas gemelas, que noche esa" },
@@ -43,6 +43,7 @@ const memories = [
 
 function PolaroidCard({ memory }: { memory: { src: string; text: string } }) {
   const [isFlipped, setIsFlipped] = useState(false);
+
   return (
     <div className="w-72 h-[400px] cursor-pointer" style={{ perspective: 1200 }} onClick={() => setIsFlipped(!isFlipped)}>
       <motion.div className="w-full h-full relative" style={{ transformStyle: "preserve-3d" }} animate={{ rotateY: isFlipped ? 180 : 0 }} transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}>
@@ -63,74 +64,80 @@ function PolaroidCard({ memory }: { memory: { src: string; text: string } }) {
 }
 
 // --------------------------------------------------------
-// COMPONENTE: RAMO ANIMADO (EL BOUQUET)
+// COMPONENTE: BOUQUET DE GIRASOLES VECTORIAL (CODEADO)
 // --------------------------------------------------------
-function AnimatedBouquet({ flowers }: { flowers: { rosas: boolean; girasoles: boolean; tulipanes: boolean } }) {
-  const selectedEmojis: { char: string; filter: string }[] = [];
-  // Usamos filtros CSS para teñir las rosas rojas y tulipanes rosados a AMARILLO VIVO
-  if (flowers.rosas) selectedEmojis.push({ char: '🌹', filter: 'hue-rotate(70deg) brightness(1.5) saturate(1.2)' });
-  if (flowers.girasoles) selectedEmojis.push({ char: '🌻', filter: 'none' });
-  if (flowers.tulipanes) selectedEmojis.push({ char: '🌷', filter: 'hue-rotate(50deg) brightness(1.3) saturate(1.5)' });
-  // Un toquecito de blanco para rellenar (simulando las florcitas blancas de tu foto)
-  selectedEmojis.push({ char: '💮', filter: 'brightness(1.2)' });
-
-  // Generamos unas 45 flores para que quede un ramo bien tupido
-  const flowerItems = Array.from({ length: 45 }).map((_, i) => {
-    const type = selectedEmojis[i % selectedEmojis.length];
-    // Posicionamiento en círculo con matemáticas
-    const angle = Math.random() * Math.PI * 2;
-    const radius = Math.sqrt(Math.random()) * 85; // Radio del ramo
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
-    return { id: i, x, y, ...type };
-  });
-
-  // Ordenamos para que las de abajo se rendericen al frente (efecto 3D)
-  flowerItems.sort((a, b) => a.y - b.y);
+function SunflowerBouquet() {
+  const petalsCount = 14;
 
   return (
     <motion.div 
-      initial={{ scale: 0, y: 150 }} 
+      initial={{ scale: 0, y: 50 }} 
       animate={{ scale: 1, y: 0 }} 
-      transition={{ type: "spring", damping: 12, duration: 1 }}
-      className="relative w-80 h-96 flex flex-col items-center justify-center mb-8"
+      transition={{ type: "spring", damping: 15, duration: 0.8 }}
+      className="relative w-72 h-80 flex flex-col items-center justify-center mb-6"
     >
-      {/* Envoltura trasera (Papel blanco translúcido) */}
-      <div className="absolute top-10 w-72 h-72 bg-white/40 rounded-full blur-sm" />
-      <div className="absolute top-4 w-80 h-80 bg-white/20 rounded-full rotate-45 border-dashed border-2 border-white/50" />
-
-      {/* Tallo y cono base */}
-      <div className="absolute bottom-0 w-32 h-48 bg-[#e8eedf] shadow-inner" style={{ clipPath: "polygon(10% 100%, 90% 100%, 100% 0, 0 0)", transform: "translateY(10px)" }} />
-      <div className="absolute bottom-[-10px] w-24 h-56 bg-[#c4d7b2]" style={{ clipPath: "polygon(30% 100%, 70% 100%, 100% 0, 0 0)" }} />
-
-      {/* Flores agrupadas */}
-      <div className="relative w-48 h-48 mt-[-60px]">
-        {flowerItems.map((f, i) => (
-          <motion.div
-            key={f.id}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.8 + (i * 0.03), type: "spring" }} // Brotan una por una rápidamente
-            className="absolute text-5xl drop-shadow-md"
-            style={{ 
-              left: `calc(50% + ${f.x}px - 24px)`, 
-              top: `calc(50% + ${f.y}px - 24px)`,
-              filter: f.filter,
-              zIndex: Math.floor(f.y)
-            }}
-          >
-            {f.char}
-          </motion.div>
-        ))}
+      {/* Papel de envoltura del ramo */}
+      <div className="absolute bottom-0 w-44 h-56 bg-gradient-to-b from-amber-50 to-amber-200 rounded-b-3xl shadow-2xl border-2 border-amber-300/40 flex flex-col items-center justify-end pb-4 z-20">
+        <div className="w-16 h-10 bg-amber-500 rounded-full shadow-lg flex items-center justify-center text-white text-2xl">
+          🎀
+        </div>
       </div>
 
-      {/* Lazo Frontal */}
-      <motion.div 
-        initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 2.5, type: "spring" }}
-        className="absolute bottom-16 text-6xl drop-shadow-lg z-50"
-      >
-        🎀
-      </motion.div>
+      {/* Contenedor de Girasoles Codeados */}
+      <div className="absolute -top-6 w-64 h-64 flex items-center justify-center z-10">
+        
+        {/* Girasol Central */}
+        <div className="absolute top-2 w-36 h-36 flex items-center justify-center animate-pulse">
+          <svg className="w-full h-full drop-shadow-lg" viewBox="0 0 100 100">
+            {Array.from({ length: petalsCount }).map((_, i) => (
+              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#FACC15" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
+            ))}
+            <circle cx="50" cy="50" r="18" fill="#78350F" />
+            <circle cx="50" cy="50" r="13" fill="#451A03" />
+          </svg>
+        </div>
+
+        {/* Girasol Izquierdo */}
+        <div className="absolute left-0 top-14 w-28 h-28">
+          <svg className="w-full h-full drop-shadow-md" viewBox="0 0 100 100">
+            {Array.from({ length: petalsCount }).map((_, i) => (
+              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#EAB308" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
+            ))}
+            <circle cx="50" cy="50" r="18" fill="#78350F" />
+          </svg>
+        </div>
+
+        {/* Girasol Derecho */}
+        <div className="absolute right-0 top-14 w-28 h-28">
+          <svg className="w-full h-full drop-shadow-md" viewBox="0 0 100 100">
+            {Array.from({ length: petalsCount }).map((_, i) => (
+              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#EAB308" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
+            ))}
+            <circle cx="50" cy="50" r="18" fill="#78350F" />
+          </svg>
+        </div>
+
+        {/* Girasol Trasero Izquierdo */}
+        <div className="absolute left-6 -top-2 w-24 h-24">
+          <svg className="w-full h-full drop-shadow-sm" viewBox="0 0 100 100">
+            {Array.from({ length: petalsCount }).map((_, i) => (
+              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#CA8A04" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
+            ))}
+            <circle cx="50" cy="50" r="18" fill="#451A03" />
+          </svg>
+        </div>
+
+        {/* Girasol Trasero Derecho */}
+        <div className="absolute right-6 -top-2 w-24 h-24">
+          <svg className="w-full h-full drop-shadow-sm" viewBox="0 0 100 100">
+            {Array.from({ length: petalsCount }).map((_, i) => (
+              <ellipse key={i} cx="50" cy="50" rx="10" ry="28" fill="#CA8A04" transform={`rotate(${i * (360 / petalsCount)} 50 50)`} />
+            ))}
+            <circle cx="50" cy="50" r="18" fill="#451A03" />
+          </svg>
+        </div>
+
+      </div>
     </motion.div>
   );
 }
@@ -145,9 +152,6 @@ export default function AnniversaryApp() {
   
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const [showNotification, setShowNotification] = useState(false);
-
-  const [flowers, setFlowers] = useState({ rosas: false, girasoles: false, tulipanes: false });
-  const hasSelectedFlowers = flowers.rosas || flowers.girasoles || flowers.tulipanes;
 
   useEffect(() => {
     if (step === 3) {
@@ -181,17 +185,6 @@ export default function AnniversaryApp() {
     }());
   };
 
-  // Solo avanzamos de pantalla, el ramo se dibuja solo ahora
-  const buildBouquet = () => {
-    setStep(11);
-    // Un toque de chispas de confeti doradas de fondo
-    confetti({ particleCount: 100, spread: 100, origin: { y: 0.5 }, colors: ['#FDE047', '#FEF08A', '#ffffff'] });
-  };
-
-  const toggleFlower = (type: 'rosas' | 'girasoles' | 'tulipanes') => {
-    setFlowers(prev => ({ ...prev, [type]: !prev[type] }));
-  };
-
   const bgClass = step >= 10 
     ? "bg-gradient-to-br from-[#fff3b0] to-[#fce043]" 
     : "bg-gradient-to-br from-[#e0c3fc] to-[#8ec5fc]";
@@ -200,95 +193,134 @@ export default function AnniversaryApp() {
     <main className={`min-h-screen ${step === 0 ? 'bg-gray-900' : bgClass} flex flex-col items-center justify-center p-6 font-sans text-gray-900 overflow-hidden relative transition-colors duration-1000`}>
       <AnimatePresence mode="wait">
 
+        {/* PANTALLA 0: SPLIT SCREEN (INICIO) */}
         {step === 0 && (
           <motion.div key="screen0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 flex flex-col md:flex-row w-full h-full m-0 p-0">
-            <motion.div whileHover={{ scale: 1.02, zIndex: 10 }} onClick={() => setStep(10)} className="flex-1 bg-gradient-to-br from-[#fff3b0] to-[#fce043] flex flex-col items-center justify-center cursor-pointer md:border-r-4 border-b-4 md:border-b-0 border-white/30 transition-transform shadow-2xl relative overflow-hidden group">
+            
+            {/* Mitad Flores Amarillas */}
+            <motion.div 
+              whileHover={{ scale: 1.02, zIndex: 10 }}
+              onClick={() => {
+                setStep(10);
+                confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 }, colors: ['#FACC15', '#FEF08A', '#CA8A04'] });
+              }}
+              className="flex-1 bg-gradient-to-br from-[#fff3b0] to-[#fce043] flex flex-col items-center justify-center cursor-pointer md:border-r-4 border-b-4 md:border-b-0 border-white/30 transition-transform shadow-2xl relative overflow-hidden group"
+            >
               <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
                 <Flower2 size={80} className="text-yellow-600 mb-6 drop-shadow-md group-hover:scale-110 transition-transform" />
               </motion.div>
               <h2 className="text-4xl font-extrabold text-yellow-800 drop-shadow-sm text-center px-4">Flores Amarillas</h2>
             </motion.div>
 
-            <motion.div whileHover={{ scale: 1.02, zIndex: 10 }} onClick={() => setStep(1)} className="flex-1 bg-gradient-to-br from-[#e0c3fc] to-[#8ec5fc] flex flex-col items-center justify-center cursor-pointer transition-transform shadow-2xl relative overflow-hidden group">
+            {/* Mitad Renovar Contrato */}
+            <motion.div 
+              whileHover={{ scale: 1.02, zIndex: 10 }}
+              onClick={() => setStep(1)}
+              className="flex-1 bg-gradient-to-br from-[#e0c3fc] to-[#8ec5fc] flex flex-col items-center justify-center cursor-pointer transition-transform shadow-2xl relative overflow-hidden group"
+            >
               <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl mb-6 overflow-hidden relative border-4 border-white group-hover:scale-110 transition-transform">
                 <Image src="/logo.jpg" alt="Bebo FC Logo" fill className="object-cover" />
               </div>
               <h2 className="text-4xl font-extrabold text-white drop-shadow-md text-center px-4">Renovar Contrato</h2>
             </motion.div>
-          </motion.div>
-        )}
 
-        {/* PANTALLA 10: ARMA TU BOUQUET */}
-        {step === 10 && (
-          <motion.div key="screen10" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -50 }} className="flex flex-col items-center w-full max-w-md p-6 relative z-10">
-            <button onClick={() => setStep(0)} className="absolute -top-10 left-0 text-yellow-700 hover:text-yellow-900 bg-white/30 p-2 rounded-full transition-colors">
-              <ArrowLeft size={24} />
-            </button>
-            <h1 className="text-4xl font-extrabold mb-8 text-yellow-800 drop-shadow-sm text-center">Arma tu bouquet 💐</h1>
-            
-            <div className="w-full space-y-4 mb-10">
-              <div onClick={() => toggleFlower('rosas')} className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border-4 ${flowers.rosas ? 'bg-white border-yellow-400 shadow-lg scale-105' : 'bg-white/50 border-transparent hover:bg-white/70'}`}>
-                <div className="flex items-center gap-4"><span className="text-4xl" style={{filter: 'hue-rotate(70deg) brightness(1.5)'}}>🌹</span><span className="text-xl font-bold text-gray-700">Rosas Amarillas</span></div>
-                {flowers.rosas && <Check className="text-yellow-500" size={28} />}
-              </div>
-              <div onClick={() => toggleFlower('girasoles')} className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border-4 ${flowers.girasoles ? 'bg-white border-yellow-400 shadow-lg scale-105' : 'bg-white/50 border-transparent hover:bg-white/70'}`}>
-                <div className="flex items-center gap-4"><span className="text-4xl">🌻</span><span className="text-xl font-bold text-gray-700">Girasoles</span></div>
-                {flowers.girasoles && <Check className="text-yellow-500" size={28} />}
-              </div>
-              <div onClick={() => toggleFlower('tulipanes')} className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border-4 ${flowers.tulipanes ? 'bg-white border-yellow-400 shadow-lg scale-105' : 'bg-white/50 border-transparent hover:bg-white/70'}`}>
-                <div className="flex items-center gap-4"><span className="text-4xl" style={{filter: 'hue-rotate(50deg) brightness(1.3)'}}>🌷</span><span className="text-xl font-bold text-gray-700">Tulipanes Amarillos</span></div>
-                {flowers.tulipanes && <Check className="text-yellow-500" size={28} />}
-              </div>
-            </div>
-
-            <button onClick={buildBouquet} disabled={!hasSelectedFlowers} className={`font-bold text-xl py-4 w-full rounded-full shadow-xl transition-all ${hasSelectedFlowers ? 'bg-yellow-600 text-white hover:bg-yellow-700 hover:scale-105' : 'bg-yellow-300/50 text-yellow-600/50 cursor-not-allowed'}`}>
-              Continuar
-            </button>
-          </motion.div>
-        )}
-
-        {/* PANTALLA 11: EL BOUQUET ARMADO */}
-        {step === 11 && (
-          <motion.div key="screen11" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center text-center p-4 max-w-md relative z-10 w-full h-full justify-center">
-            
-            {/* El componente del ramo mágico que creamos arriba */}
-            <AnimatedBouquet flowers={flowers} />
-
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.5 }} className="text-4xl font-extrabold mb-4 text-yellow-800 drop-shadow-sm mt-4">
-              ¡Un detalle para ti!
-            </motion.h1>
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.8 }} className="text-xl text-yellow-900/80 font-medium mb-12">
-              Porque te mereces todas las flores del mundo.
-            </motion.p>
-            
-            <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3 }} onClick={() => setStep(0)} className="bg-white text-yellow-700 hover:bg-yellow-50 font-bold px-8 py-3 rounded-full shadow-md transition-transform active:scale-95">
-              Volver al inicio
-            </motion.button>
           </motion.div>
         )}
 
         {/* =========================================
-            RUTAS BEBO FC (PANTALLAS 1 A 4 ESTÁN IGUAL)
+            RUTA: FLORES AMARILLAS 
            ========================================= */}
+        
+        {/* PANTALLA 10: BOUQUET DE GIRASOLES + BOTONES */}
+        {step === 10 && (
+          <motion.div key="screen10" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -50 }} className="flex flex-col items-center w-full max-w-md p-6 relative z-10 text-center">
+            
+            <h1 className="text-3xl font-extrabold mb-2 text-yellow-900 drop-shadow-sm">Para ti, mi amor 🌻</h1>
+            
+            {/* El ramo codeado de girasoles */}
+            <SunflowerBouquet />
+
+            <div className="flex flex-col gap-4 w-full mt-2">
+              <button 
+                onClick={() => setStep(12)} 
+                className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg py-4 px-8 rounded-full shadow-lg flex items-center justify-center gap-3 transition-transform hover:scale-105 active:scale-95"
+              >
+                <Mail size={22} /> Abrir nota
+              </button>
+
+              <button 
+                onClick={() => setStep(0)} 
+                className="bg-white/80 hover:bg-white text-yellow-800 font-bold py-3 px-6 rounded-full shadow-md transition-all"
+              >
+                Volver al inicio
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* PANTALLA 12: NOTA DE FLORES AMARILLAS */}
+        {step === 12 && (
+          <motion.div key="screen12" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: 50 }} className="flex flex-col items-center w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl relative z-10">
+            <button onClick={() => setStep(10)} className="absolute top-4 left-4 text-gray-400 hover:text-yellow-600 transition-colors">
+              <ArrowLeft size={28} />
+            </button>
+
+            <h2 className="text-3xl font-bold text-yellow-700 mb-6 mt-4">Una pequeña nota 💛</h2>
+            
+            <div className="text-gray-700 space-y-4 text-lg leading-relaxed mb-8 w-full font-serif italic text-justify">
+              <p>Mi amor,</p>
+              <p>Dicen que regalar flores amarillas significa querer compartir la vida entera con alguien. No hay nadie en este mundo con quien prefiera caminar de la mano, reír y construir momentos que contigo.</p>
+              <p>Gracias por iluminar mis días con tu sonrisa. ¡Te amo muchísimo!</p>
+              <p className="font-bold text-right mt-4">- Diego</p>
+            </div>
+
+            <div className="flex gap-4 w-full">
+              <button onClick={() => setStep(10)} className="flex-1 bg-yellow-100 text-yellow-800 hover:bg-yellow-200 font-bold py-3 rounded-full transition-colors">
+                Ver Bouquet
+              </button>
+              <button onClick={() => setStep(0)} className="flex-1 bg-yellow-600 text-white hover:bg-yellow-700 font-bold py-3 rounded-full transition-colors shadow-md">
+                Inicio
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+
+        {/* =========================================
+            RUTA: BEBO FC (Renovar Contrato) 
+           ========================================= */}
+        
         {step === 1 && (
           <motion.div key="screen1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.5 }} className="flex flex-col items-center text-center max-w-md w-full relative z-10">
-            <button onClick={() => setStep(0)} className="absolute -top-6 left-0 text-white/70 hover:text-white bg-black/10 p-2 rounded-full transition-colors"><ArrowLeft size={24} /></button>
-            <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center shadow-xl mb-8 overflow-hidden relative border-4 border-white"><Image src="/logo.jpg" alt="Bebo FC Logo" fill className="object-cover" /></div>
+            <button onClick={() => setStep(0)} className="absolute -top-6 left-0 text-white/70 hover:text-white bg-black/10 p-2 rounded-full transition-colors">
+              <ArrowLeft size={24} />
+            </button>
+            <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center shadow-xl mb-8 overflow-hidden relative border-4 border-white">
+               <Image src="/logo.jpg" alt="Bebo FC Logo" fill className="object-cover" />
+            </div>
             <h1 className="text-4xl font-extrabold mb-10 text-white drop-shadow-md">¿Quieres renovar contrato?</h1>
             <div className="flex gap-6 w-full justify-center">
               <button onClick={() => setStep(2)} className="bg-white text-indigo-600 hover:bg-indigo-50 font-bold text-xl py-3 px-10 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95">Sí</button>
               <motion.button onClick={handleNoClick} animate={showError ? { x: [-10, 10, -10, 10, 0] } : {}} transition={{ duration: 0.4 }} className="bg-white/30 text-white border-2 border-white hover:bg-white/40 font-bold text-xl py-3 px-10 rounded-full shadow-lg transition-transform active:scale-95">No</motion.button>
             </div>
-            <div className="h-12 mt-6">{showError && <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-white font-medium bg-red-500/80 px-6 py-2 rounded-full shadow-sm">Respuesta incorrecta, intente de nuevo 😉</motion.p>}</div>
+            <div className="h-12 mt-6">
+              {showError && <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-white font-medium bg-red-500/80 px-6 py-2 rounded-full shadow-sm">Respuesta incorrecta, intente de nuevo 😉</motion.p>}
+            </div>
           </motion.div>
         )}
 
         {step === 2 && (
            <motion.div key="screen2" initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, scale: 0.8 }} transition={{ duration: 0.5 }} className="flex flex-col items-center text-center max-w-md w-full">
-             <motion.div className="w-72 h-72 rounded-2xl overflow-hidden shadow-2xl mb-8 border-4 border-white relative bg-white/30" initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ delay: 0.2 }}><Image src="/jersey.jpg" alt="Camiseta Beba 25" fill className="object-cover" /></motion.div>
+             <motion.div className="w-72 h-72 rounded-2xl overflow-hidden shadow-2xl mb-8 border-4 border-white relative bg-white/30" initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ delay: 0.2 }}>
+               <Image src="/jersey.jpg" alt="Camiseta Beba 25" fill className="object-cover" />
+             </motion.div>
              <h2 className="text-4xl font-extrabold mb-10 text-white drop-shadow-md">¿Qué dices, 4 años más?</h2>
              <motion.button onClick={handleAcceptClick} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={`font-bold text-xl py-4 px-12 rounded-full shadow-xl transition-colors duration-500 overflow-hidden ${isSure ? "bg-pink-500 text-white border-2 border-pink-400" : "bg-white text-indigo-600"}`}>
-               <AnimatePresence mode="wait"><motion.span key={isSure ? "sure" : "accept"} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.2 }} className="block">{isSure ? "¿Estás segura?" : "Acepto"}</motion.span></AnimatePresence>
+               <AnimatePresence mode="wait">
+                 <motion.span key={isSure ? "sure" : "accept"} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.2 }} className="block">
+                   {isSure ? "¿Estás segura?" : "Acepto"}
+                 </motion.span>
+               </AnimatePresence>
              </motion.button>
            </motion.div>
         )}
@@ -296,22 +328,44 @@ export default function AnniversaryApp() {
         {step === 3 && (
            <motion.div key="screen3" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.8 }} className="flex flex-col items-center w-full max-w-sm relative">
              <h2 className="text-3xl font-extrabold mb-8 text-white drop-shadow-md text-center">Nuestro Recorrido ❤️</h2>
+             
              <div className="w-72 relative">
-               <Swiper effect={"cards"} grabCursor={true} modules={[EffectCards]} className="w-full" onSwiper={setSwiperInstance}>
-                 {memories.map((memory) => (<SwiperSlide key={memory.id} className="bg-transparent flex justify-center"><PolaroidCard memory={memory} /></SwiperSlide>))}
+               <Swiper
+                 effect={"cards"}
+                 grabCursor={true}
+                 modules={[EffectCards]}
+                 className="w-full"
+                 onSwiper={setSwiperInstance}
+               >
+                 {memories.map((memory) => (
+                   <SwiperSlide key={memory.id} className="bg-transparent flex justify-center">
+                     <PolaroidCard memory={memory} />
+                   </SwiperSlide>
+                 ))}
                </Swiper>
              </div>
+             
              <div className="flex flex-col items-center gap-4 mt-8">
                <p className="text-white/80 font-medium text-sm text-center">Desliza para ver más • Toca la foto para leer</p>
-               <button onClick={() => swiperInstance?.slideTo(0)} className="flex items-center gap-2 text-white bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full backdrop-blur-sm transition-all"><RotateCcw size={18} /> Volver a la primera</button>
+               
+               <button 
+                 onClick={() => swiperInstance?.slideTo(0)} 
+                 className="flex items-center gap-2 text-white bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full backdrop-blur-sm transition-all"
+               >
+                 <RotateCcw size={18} /> Volver a la primera
+               </button>
              </div>
            </motion.div>
         )}
 
         {step === 4 && (
           <motion.div key="screen4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: 50 }} className="flex flex-col items-center w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl relative overflow-y-auto max-h-[90vh]">
-            <button onClick={() => setStep(3)} className="absolute top-4 left-4 text-gray-400 hover:text-indigo-600 transition-colors"><ArrowLeft size={28} /></button>
+            <button onClick={() => setStep(3)} className="absolute top-4 left-4 text-gray-400 hover:text-indigo-600 transition-colors">
+              <ArrowLeft size={28} />
+            </button>
+
             <h2 className="text-3xl font-bold text-indigo-600 mb-6 mt-4">Para mi amor...</h2>
+            
             <div className="text-gray-700 space-y-4 text-lg leading-relaxed mb-10 w-full font-serif italic text-justify">
               <p>Hola mi vida,</p>
               <p>Lamento no haber podido estar justo a tu lado para este momento y poder celebrar juntos nuestro cuarto aniversario, pero desarrollé esto esperando subirte los ánimos, mi amorcito lindo.</p>
@@ -321,7 +375,10 @@ export default function AnniversaryApp() {
               <p className="font-bold text-right mt-4">Bebo</p>
               <p className="font-bold text-right mt-4">Diego Abreu</p>
             </div>
-            <button onClick={throwRoses} className="bg-pink-100 text-pink-600 border-2 border-pink-300 hover:bg-pink-200 px-6 py-3 rounded-full flex items-center gap-3 font-bold text-lg shadow-md hover:scale-105 transition-transform active:scale-95"><Flower2 size={24} /> ¡Toca para una sorpresa!</button>
+
+            <button onClick={throwRoses} className="bg-pink-100 text-pink-600 border-2 border-pink-300 hover:bg-pink-200 px-6 py-3 rounded-full flex items-center gap-3 font-bold text-lg shadow-md hover:scale-105 transition-transform active:scale-95">
+              <Flower2 size={24} /> ¡Toca para una sorpresa!
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
